@@ -251,8 +251,8 @@ class JsonParser
 			throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, invalid number.");
 
 		bool realType = (dot > 0|| e > 0);
-		double d;
-		intmax_t i;
+		double d = 0;
+		intmax_t i = 0;
 		char *endptr;
 
 		errno = 0;
