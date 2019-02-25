@@ -319,6 +319,8 @@ public:
 	operator long double() const throw(JsonNodeTypeMissMatchError) { return wantReal(); }
 	operator std::string() const throw(JsonNodeTypeMissMatchError) { return wantString(); }
 
+	operator char() const throw(JsonNodeTypeMissMatchError)               { return (char)              wantInt(); }
+	operator unsigned char() const throw(JsonNodeTypeMissMatchError)      { return (unsigned char)     wantInt(); }
 	operator short() const throw(JsonNodeTypeMissMatchError)              { return (short)             wantInt(); }
 	operator unsigned short() const throw(JsonNodeTypeMissMatchError)     { return (unsigned short)    wantInt(); }
 	operator int() const throw(JsonNodeTypeMissMatchError)                { return (int)               wantInt(); }
