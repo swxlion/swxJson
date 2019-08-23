@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <math.h>
+#include <string.h>
 #include <inttypes.h>
 #include <stack>
 #include "swxJson.h"

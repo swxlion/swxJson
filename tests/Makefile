@@ -2,7 +2,7 @@ EXES_TEST_Functional = swxJsonFunctionalTest
 EXES_TEST_Advanced = swxJsonAdvancedTest
 EXES_TEST_Parse = swxJsonParseTest
 
-EXS_perTest = perTest
+EXS_perTest = 
 
 OPTIMIZE = -O2
 
