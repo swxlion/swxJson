@@ -22,6 +22,8 @@ class JsonStringEscaper
 	}
 	void slash(std::ostream& os, const char * start, int len, int & idx)
 	{
+		os << "\\";
+		/*
 		if (idx + 1 < len
 			&& (start[idx+1] == '"'
 				|| start[idx+1] == '\\'
@@ -39,6 +41,7 @@ class JsonStringEscaper
 		}
 		else
 			os << "\\\\";
+		*/
 
 	}
 	void jsonSpecialChars(std::ostream& os, const char * start, int len, int & idx)
