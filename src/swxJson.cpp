@@ -99,7 +99,7 @@ public:
     	for (int i = 0; i < len; i++)
     	{
     		if ((p[i] & 0x80) == 0x00)
-    			(this->*_callMap[(unsigned char)(*p)])(os, p, len, i);
+    			(this->*_callMap[(unsigned char)(p[i])])(os, p, len, i);
     		else
     		{
     			if ((i & mark2) == utf82 && i + 1 < len)
@@ -128,7 +128,7 @@ public:
 					i += 5;
 				}
 				else
-					(this->*_callMap[(unsigned char)(*p)])(os, p, len, i);
+					(this->*_callMap[(unsigned char)(p[i])])(os, p, len, i);
     		}
     	}
 
