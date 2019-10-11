@@ -22,7 +22,7 @@ class JsonStringEscaper
 	}
 	void slash(std::ostream& os, const char * start, int len, int & idx)
 	{
-		os << "\\";
+		os << "\\\\";
 		/*
 		if (idx + 1 < len
 			&& (start[idx+1] == '"'
