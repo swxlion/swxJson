@@ -105,27 +105,27 @@ public:
     			(this->*_callMap[(unsigned char)(p[i])])(os, p, len, i);
     		else
     		{
-    			if ((i & mark2) == utf82 && i + 1 < len)
+    			if ((p[i] & mark2) == utf82 && i + 1 < len)
 				{
 					os << p[i] << p[i+1];
 					i += 1;
 				}
-				else if ((i & mark3) == utf83 && i + 2 < len)
+				else if ((p[i] & mark3) == utf83 && i + 2 < len)
 				{
 					os << p[i] << p[i+1] << p[i+2];
 					i += 2;
 				}
-				else if ((i & mark4) == utf84 && i + 3 < len)
+				else if ((p[i] & mark4) == utf84 && i + 3 < len)
 				{
 					os << p[i] << p[i+1] << p[i+2] << p[i+3];
 					i += 3;
 				}
-				else if ((i & mark5) == utf85 && i + 4 < len)
+				else if ((p[i] & mark5) == utf85 && i + 4 < len)
 				{
 					os << p[i] << p[i+1] << p[i+2] << p[i+3] << p[i+4];
 					i += 4;
 				}
-				else if ((i & mark6) == utf86 && i + 5 < len)
+				else if ((p[i] & mark6) == utf86 && i + 5 < len)
 				{
 					os << p[i] << p[i+1] << p[i+2] << p[i+3] << p[i+4] << p[i+5];
 					i += 5;
