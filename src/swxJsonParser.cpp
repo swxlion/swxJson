@@ -329,6 +329,9 @@ JsonPtr JsonParser::generalProcess()
 
 JsonPtr JsonParser::parse(const char* json)
 {
+	if (!json || *json == 0)
+		throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error. Empty content.");
+
 	_pos = (char *)json;
 	JsonPtr root;
 
