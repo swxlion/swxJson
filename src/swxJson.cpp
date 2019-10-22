@@ -174,6 +174,11 @@ std::ostream& Json::output(std::ostream& os) const
 		intmax_t * data = (intmax_t*)_data;
 		os << (*data);
 	}
+	else if (_type == JSON_UInteger)
+	{
+		uintmax_t * data = (uintmax_t*)_data;
+		os << (*data);
+	}
 	else if (_type == JSON_Object)
 	{
 		std::map<std::string, JsonPtr>* data = (std::map<std::string, JsonPtr>*)_data;
@@ -453,6 +458,13 @@ void Json::clean()
 			break;
 		}
 
+		case JSON_UInteger:
+		{
+			uintmax_t * data = (uintmax_t*)_data;
+			delete data;
+			break;
+		}
+
 		case JSON_Real:
 		{
 			double * data = (double*)_data;
@@ -503,6 +515,21 @@ void Json::setInt(intmax_t value)
 	else
 	{
 		intmax_t *data = (intmax_t*)_data;
+		*data = value;
+	}
+}
+
+void Json::setUInt(uintmax_t value)
+{
+	if (_type != JSON_UInteger)
+	{
+		clean();
+		_type = JSON_UInteger;
+		_data = new uintmax_t(value);
+	}
+	else
+	{
+		uintmax_t *data = (uintmax_t*)_data;
 		*data = value;
 	}
 }
@@ -666,6 +693,15 @@ void Json::pushInt(const std::string& path, intmax_t value, const std::string& d
 	throw JSON_ERROR_MSG(JsonNodeTypeMissMatchError, "Target node is not array.");
 }
 
+void Json::pushUInt(const std::string& path, uintmax_t value, const std::string& delim)
+{
+	JsonPtr node = createNode(path, delim, true);
+	if (node->pushUInt(value))
+		return;
+
+	throw JSON_ERROR_MSG(JsonNodeTypeMissMatchError, "Target node is not array.");
+}
+
 void Json::pushString(const std::string& path, const char* value, const std::string& delim)
 {
 	JsonPtr node = createNode(path, delim, true);
@@ -724,6 +760,7 @@ bool Json::addNode(const std::string& key, JsonPtr node)
 	return true;
 }
 
+/*
 bool Json::dictAddNull(const std::string& key)
 {
 	JsonPtr node(new Json());
@@ -737,6 +774,7 @@ JsonPtr Json::dictAddArray(const std::string& key)
 	node->setArray();
 	return (addNode(key, node) ? node : nullptr);
 }
+*/
 
 JsonPtr Json::dictAddObject(const std::string& key)
 {
@@ -771,6 +809,15 @@ void Json::addInt(const std::string& path, intmax_t value, const std::string& de
 	JsonPtr node = createNode(path, delim, true);
 	if (node->type() == JSON_Uninit)
 		node->setInt(value);
+	else
+		throw JSON_ERROR_MSG(JosnNodeExistError, "Node has existed.");
+}
+
+void Json::addUInt(const std::string& path, uintmax_t value, const std::string& delim)
+{
+	JsonPtr node = createNode(path, delim, true);
+	if (node->type() == JSON_Uninit)
+		node->setUInt(value);
 	else
 		throw JSON_ERROR_MSG(JosnNodeExistError, "Node has existed.");
 }
@@ -909,6 +956,28 @@ intmax_t Json::getInt(intmax_t dft) const
 	if (_type == JSON_Integer)
 		return *((intmax_t*)_data);
 
+	if (_type == JSON_UInteger)
+	{
+		intmax_t v = (intmax_t)(*((uintmax_t*)_data));
+		if (v >= 0)
+			return v;
+	}
+
+	return dft;
+}
+
+uintmax_t Json::getUInt(uintmax_t dft) const
+{
+	if (_type == JSON_UInteger)
+		return *((uintmax_t*)_data);
+
+	if (_type == JSON_Integer)
+	{
+		intmax_t v = *((intmax_t*)_data);
+		if (v >= 0)
+			return (uintmax_t)v;
+	}
+
 	return dft;
 }
 
@@ -959,6 +1028,28 @@ intmax_t Json::wantInt() const throw(JsonNodeTypeMissMatchError)
 {
 	if (_type == JSON_Integer)
 		return *((intmax_t*)_data);
+
+	if (_type == JSON_UInteger)
+	{
+		intmax_t v = (intmax_t)(*((uintmax_t*)_data));
+		if (v >= 0)
+			return v;
+	}
+
+	throw JSON_ERROR_MSG(JsonNodeTypeMissMatchError, "Node type miss match.");
+}
+
+uintmax_t Json::wantUInt() const throw(JsonNodeTypeMissMatchError)
+{
+	if (_type == JSON_UInteger)
+		return *((uintmax_t*)_data);
+
+	if (_type == JSON_Integer)
+	{
+		intmax_t v = *((intmax_t*)_data);
+		if (v >= 0)
+			return (uintmax_t)v;
+	}
 
 	throw JSON_ERROR_MSG(JsonNodeTypeMissMatchError, "Node type miss match.");
 }
@@ -1117,6 +1208,15 @@ intmax_t Json::getInt(const std::string& path, intmax_t dft, const std::string& 
 		return dft;
 }
 
+uintmax_t Json::getUInt(const std::string& path, uintmax_t dft, const std::string& delim)
+{
+	JsonPtr node = getNode(path, delim);
+	if (node)
+		return node->getUInt(dft);
+	else
+		return dft;
+}
+
 double Json::getReal(const std::string& path, double dft, const std::string& delim)
 {
 	JsonPtr node = getNode(path, delim);
@@ -1175,6 +1275,15 @@ intmax_t Json::wantInt(const std::string& path, const std::string& delim) throw(
 	JsonPtr node = getNode(path, delim);
 	if (node)
 		return node->wantInt();
+	
+	throw JSON_ERROR_MSG(JosnNodeNotExistError, "Target node doesn't exist.");
+}
+
+uintmax_t Json::wantUInt(const std::string& path, const std::string& delim) throw(JsonError)
+{
+	JsonPtr node = getNode(path, delim);
+	if (node)
+		return node->wantUInt();
 	
 	throw JSON_ERROR_MSG(JosnNodeNotExistError, "Target node doesn't exist.");
 }
