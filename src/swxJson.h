@@ -14,6 +14,7 @@
 #include <iostream>
 #include <memory>
 #include <tuple>
+#include <queue>
 #include "swxJsonUtils.h"
 
 namespace swxJson {
