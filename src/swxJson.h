@@ -344,6 +344,17 @@ public:
 	double wantReal() const throw(JsonNodeTypeMissMatchError);
 	std::string wantString() const throw(JsonNodeTypeMissMatchError);
 
+	/*
+		* Deprecated !!! *
+
+		All want???Vector(), want???Dict() are deprecated!!!
+
+		Please using:
+
+			wantVector<???>(), wantList<???>(), wantSet<???>(), ..., wantDict<???>()
+
+			Please refer "swxJson.Enhancement.inc.h" for all new interfaces.
+	*/
 	std::vector<bool> wantBoolVector() const throw(JsonNodeTypeMissMatchError);
 	std::vector<double> wantRealVector() const throw(JsonNodeTypeMissMatchError);
 	std::vector<intmax_t> wantIntVector() const throw(JsonNodeTypeMissMatchError);
@@ -396,6 +407,17 @@ public:
 	Json& operator [] (const std::string& path) throw(JsonNodeTypeMissMatchError);
 	Json& operator [] (int index) throw(JsonNodeTypeMissMatchError);
 
+	/*
+		* Deprecated !!! *
+
+		All want???Vector(...), want???Dict(...) are deprecated!!!
+
+		Please using:
+
+			wantVector<???>(...), wantList<???>(...), wantSet<???>(...), ..., wantDict<???>(...)
+
+			Please refer "swxJson.Enhancement.inc.h" for all new interfaces.
+	*/
 	std::vector<bool> wantBoolVector(const std::string& path, const std::string& delim = "./") throw(JsonError);
 	std::vector<double> wantRealVector(const std::string& path, const std::string& delim = "./") throw(JsonError);
 	std::vector<intmax_t> wantIntVector(const std::string& path, const std::string& delim = "./") throw(JsonError);

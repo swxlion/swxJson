@@ -734,6 +734,6 @@ Analysis:
 
 * Change the double type to long type for float data. <br> This requirement maybe not urgent.
 
-* Improve performance and efficiency. <br> There is a plan ready, but it will lead to a sharp increase in code length. The total length of src is 3396 lines currently, I don't hope it increasing more.
+* Improve performance and efficiency. <br> There is a plan ready, but it will lead to a sharp increase in code length. The total length of src is 3418 lines currently, I don't hope it increasing more.
 
 Plan:<br>Currently busy in other projects, maybe improve them in future.
