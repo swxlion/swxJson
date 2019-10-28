@@ -438,7 +438,7 @@ json.add("aaa.zzz", "abc");
 json.add("aaa.ccc", true);
 ```
 
-更多细节请参见 “2. swxJson 细节” 部分。<br>更多示例请参见: <br>[swxJsonFunctionalTest.cpp](/tests/swxJsonFunctionalTest.cpp)<br>[swxJsonAdvancedTest.cpp](/tests/swxJsonAdvancedTest.cpp)
+更多细节请参见 “2. swxJson 细节” 部分。<br>更多示例请参见: <br>[swxJsonFunctionalTest.cpp](/tests/swxJsonFunctionalTest.cpp)<br>[swxJsonAdvancedTest_modify.cpp](/tests/swxJsonAdvancedTest_modify.cpp)<br>[swxJsonAdvancedTest_fetch.cpp](/tests/swxJsonAdvancedTest_fetch.cpp)<br>[swxJsonAdvancedTest_fetch_v2.cpp](/tests/swxJsonAdvancedTest_fetch_v2.cpp)
 
 
 ## 2. swxJson 的细节
@@ -550,7 +550,7 @@ swxJson 的数据打包 API 一共有5个系列的函数，外加两个 fill() �
 
 	如果目标节点不存在，或者类型不匹配，want 系列函数抛出异常，否则将返回对应类型的节点数据。
 
-	具体接口请参见：<br>[swxJson.h](/src/swxJson.h)
+	具体接口请参见：<br>[swxJson.h](/src/swxJson.h)<br>[swxJson.Enhancement.inc.h](/src/swxJson.Enhancement.inc.h)
 
 ### 2.3. 注意事项
 
@@ -734,7 +734,7 @@ swxJson 以 **便利性** 和 **易用性** 为第一要务，当前版本**不�
 
 * 将内部浮点型由 double 改为 long double 保存。<br>感觉这个并不急迫，需求并不强烈。
 
-* 提升性能和效率。<br>已经有方案，但会导致代码长度急剧增长。目前 src 一共 2942 行，不想变得更长…… :(
+* 提升性能和效率。<br>已经有方案，但会导致代码长度急剧增长。目前 src 一共 3396 行，不想变得更长…… :(
 
 计划：
 目前在忙其他的项目，有空再实现吧。

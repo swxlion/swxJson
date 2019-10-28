@@ -439,7 +439,7 @@ json.add("aaa.zzz", "abc");
 json.add("aaa.ccc", true);
 ```
 
-Please see the section "2. Detail of swxJson" for more details.<br>More examples: <br>[swxJsonFunctionalTest.cpp](/tests/swxJsonFunctionalTest.cpp)<br>[swxJsonAdvancedTest.cpp](/tests/swxJsonAdvancedTest.cpp)
+Please see the section "2. Detail of swxJson" for more details.<br>More examples: <br>[swxJsonFunctionalTest.cpp](/tests/swxJsonFunctionalTest.cpp)<br>[swxJsonAdvancedTest_modify.cpp](/tests/swxJsonAdvancedTest_modify.cpp)<br>[swxJsonAdvancedTest_fetch.cpp](/tests/swxJsonAdvancedTest_fetch.cpp)<br>[swxJsonAdvancedTest_fetch_v2.cpp](/tests/swxJsonAdvancedTest_fetch_v2.cpp)
 
 
 ## 2. Detail of swxJson
@@ -545,7 +545,7 @@ For following API functions:
 
 	If the operated node does not exist, or if the type does not match, the want functions will throw an exception. Otherwise the data of opreated node will be returned.
 
-	Interfaces & APIs:<br>[swxJson.h](/src/swxJson.h)
+	Interfaces & APIs:<br>[swxJson.h](/src/swxJson.h)<br>[swxJson.Enhancement.inc.h](/src/swxJson.Enhancement.inc.h)
 
 ### 2.3. Notes
 
@@ -734,6 +734,6 @@ Analysis:
 
 * Change the double type to long type for float data. <br> This requirement maybe not urgent.
 
-* Improve performance and efficiency. <br> There is a plan ready, but it will lead to a sharp increase in code length. The total length of src is 2942 lines currently, I don't hope it increasing more.
+* Improve performance and efficiency. <br> There is a plan ready, but it will lead to a sharp increase in code length. The total length of src is 3396 lines currently, I don't hope it increasing more.
 
 Plan:<br>Currently busy in other projects, maybe improve them in future.
