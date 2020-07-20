@@ -13,6 +13,7 @@ class JsonParser
 	MethodFunc _callMap[256];
 
 	CharsChecker _numberChars;
+	std::ostringstream _outStringStream;
 
 	std::stack<JsonPtr> _nodeStack;
 
@@ -139,7 +140,125 @@ class JsonParser
 		return nullptr;
 	}
 
+	void UTF16ToUTF8(uint16_t utf16Char)
+	{
+		const uint8_t utf82 = 0xc0;	//-- 1100 0000
+		const uint8_t utf83 = 0xe0;	//-- 1110 0000
+		const uint8_t low6BitsMask = 0x3F;	//-- 0011 1111
+
+		if (utf16Char <= 0x7F)
+		{
+			_outStringStream<<(char)utf16Char;
+		}
+		else if (utf16Char < 0x7FF)
+		{
+			char a = utf82 | (utf16Char >> 6);
+			char b = 0x80 | (utf16Char & low6BitsMask);
+
+			_outStringStream << a << b;
+		}
+		else
+		{
+			char a = utf83 | (utf16Char >> 12);
+			char b = 0x80 | ((utf16Char >> 6) & low6BitsMask);
+			char c = 0x80 | (utf16Char & low6BitsMask);
+
+			_outStringStream << a << b << c;
+		}
+	}
+
+	void processSlash()
+	{
+		_pos++;
+
+		if (*_pos == 0)
+			throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, uncompleted string.");
+
+		switch (*_pos)
+		{
+			// case '"':		//-- Action same as default;
+			// case '\\':		//-- Action same as default;
+			// case '/':		//-- Action same as default;
+
+			case 'b': _outStringStream<<'\b'; break;
+			case 'f': _outStringStream<<'\f'; break;
+			case 'n': _outStringStream<<'\n'; break;
+			case 'r': _outStringStream<<'\r'; break;
+			case 't': _outStringStream<<'\t'; break;
+			case 'u':
+			{
+				_pos++;
+				uint16_t utf16Char = 0;
+
+				for (int i = 0; i < 4; i++)
+				{
+					char c = *(_pos + i);
+
+					if (c <= '9' && c >= '0')
+						c -= '0';
+					else if (c <= 'f' && c>= 'a')
+						c -= 'a';
+					else if (c <= 'F' && c>= 'A')
+						c -= 'A';
+					else
+						throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, uncompleted string.");
+
+					utf16Char <<= 8;
+					utf16Char += (uint16_t)c;
+				}
+
+				UTF16ToUTF8(utf16Char);
+				_pos += 4;
+				return;
+			}
+
+			default:
+				_outStringStream<<(char)(*_pos);
+				break;
+		}
+
+		_pos++;
+	}
+
 	std::string fetchString()
+	{
+		_pos++;
+		char *_start = _pos;
+
+		while (true)
+		{
+			if (*_pos == 0)
+				throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, uncompleted string.");
+
+			else if (*_pos == '\\')
+			{
+				_outStringStream.write(_start, _pos - _start);
+				processSlash();
+				_start = _pos;
+			}
+			else if (*_pos == '"')
+			{
+				if (_outStringStream.tellp() == 0)
+				{
+					std::string str(_start, _pos - _start);
+					_pos++;
+					return str;
+				}
+				else
+				{
+					_outStringStream.write(_start, _pos - _start);
+					std::string str = _outStringStream.str();
+					_outStringStream.str("");
+					_pos++;
+					return str;
+				}
+			}
+			else
+				_pos++;
+		}
+	}
+	
+	/*std::string fetchString()
 	{
 		_pos++;
 		char *_start = _pos;
@@ -163,7 +282,7 @@ class JsonParser
 
 			_pos++;
 		}
-	}
+	}*/
 
 	JsonPtr processString()
 	{
