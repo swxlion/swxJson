@@ -197,13 +197,19 @@ class JsonParser
 					if (c <= '9' && c >= '0')
 						c -= '0';
 					else if (c <= 'f' && c>= 'a')
+					{
 						c -= 'a';
+						c += 10;
+					}
 					else if (c <= 'F' && c>= 'A')
+					{
 						c -= 'A';
+						c += 10;
+					}
 					else
 						throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, uncompleted string.");
 
-					utf16Char <<= 8;
+					utf16Char <<= 4;
 					utf16Char += (uint16_t)c;
 				}
 
