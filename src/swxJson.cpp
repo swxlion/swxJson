@@ -7,6 +7,8 @@ using namespace swxJson;
 //======================================//
 //-          Assistant Class           -//
 //======================================//
+static const char* gc_JsonStringEscaper_HexCharsArray = "0123456789abcdef";
+
 class JsonStringEscaper
 {
 	typedef void (JsonStringEscaper::* MethodFunc)(std::ostream& os, const char * start, int len, int & idx);
@@ -14,7 +16,8 @@ class JsonStringEscaper
 
 	void hexadecimal(std::ostream& os, const char * start, int len, int & idx)
 	{
-		os << "\\u" << std::hex << std::setw(4) << std::setfill('0') << (unsigned char)start[idx];
+		unsigned char c = (unsigned char)start[idx];
+		os << "\\u00" << *(gc_JsonStringEscaper_HexCharsArray + (c >> 4)) << *(gc_JsonStringEscaper_HexCharsArray + (c & 0xf));
 	}
 	void quotationMarks(std::ostream& os, const char * start, int len, int & idx)
 	{
