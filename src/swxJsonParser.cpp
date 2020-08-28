@@ -150,7 +150,7 @@ class JsonParser
 		{
 			_outStringStream<<(char)utf16Char;
 		}
-		else if (utf16Char < 0x7FF)
+		else if (utf16Char <= 0x7FF)
 		{
 			char a = utf82 | (utf16Char >> 6);
 			char b = 0x80 | (utf16Char & low6BitsMask);
@@ -165,6 +165,49 @@ class JsonParser
 
 			_outStringStream << a << b << c;
 		}
+	}
+
+	void UTF16ToUTF8(uint16_t W1, uint16_t W2)
+	{
+		const uint8_t low6BitsMask = 0x3F;	//-- 0011 1111
+
+		uint32_t utf16SurrogatePair = (((W1 - 0xD800) << 10) | (W2 - 0xDC00)) + 0x10000;
+
+		char a = 0xF0 | (utf16SurrogatePair >> 18);
+		char b = 0x80 | ((utf16SurrogatePair >> 12) & low6BitsMask);
+		char c = 0x80 | ((utf16SurrogatePair >> 6) & low6BitsMask);
+		char d = 0x80 | (utf16SurrogatePair & low6BitsMask);
+		
+		_outStringStream << a << b << c << d;
+	}
+
+	uint16_t parseUTF16Char()
+	{
+		uint16_t utf16Char = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			char c = *(_pos + i);
+
+			if (c <= '9' && c >= '0')
+				c -= '0';
+			else if (c <= 'f' && c>= 'a')
+			{
+				c -= 'a';
+				c += 10;
+			}
+			else if (c <= 'F' && c>= 'A')
+			{
+				c -= 'A';
+				c += 10;
+			}
+			else
+				throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, uncompleted string.");
+
+			utf16Char <<= 4;
+			utf16Char += (uint16_t)c;
+		}
+
+		return utf16Char;
 	}
 
 	void processSlash()
@@ -188,34 +231,36 @@ class JsonParser
 			case 'u':
 			{
 				_pos++;
-				uint16_t utf16Char = 0;
-
-				for (int i = 0; i < 4; i++)
+				uint16_t W1 = parseUTF16Char();
+				_pos += 4;
+				
+				if (W1 < 0xD800 || W1 > 0xDFFF)
 				{
-					char c = *(_pos + i);
-
-					if (c <= '9' && c >= '0')
-						c -= '0';
-					else if (c <= 'f' && c>= 'a')
-					{
-						c -= 'a';
-						c += 10;
-					}
-					else if (c <= 'F' && c>= 'A')
-					{
-						c -= 'A';
-						c += 10;
-					}
-					else
-						throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, uncompleted string.");
-
-					utf16Char <<= 4;
-					utf16Char += (uint16_t)c;
+					UTF16ToUTF8(W1);
+					return;
 				}
 
-				UTF16ToUTF8(utf16Char);
-				_pos += 4;
-				return;
+				if (W1 >= 0xD800 && W1 <= 0xDBFF)
+				{
+					if(*_pos++ != '\\')
+					{
+						throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, trail surrogates for utf-16 surrogate pair missing.");
+					}
+					else if(*_pos++ != 'u')
+					{
+						throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, trail surrogates for utf-16 surrogate pair missing.");
+					}
+					uint16_t W2 = parseUTF16Char();
+					if (W2 < 0xDC00 || W2 > 0xDFFF)
+					{
+						throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, trail surrogates for utf-16 surrogate pair in wrong range.");
+					}
+					UTF16ToUTF8(W1, W2);
+					_pos += 4;
+					return;
+				}
+				else
+					throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error, lead surrogates for utf-16 surrogate pair missing.");
 			}
 
 			default:
