@@ -19,14 +19,14 @@ namespace swxJson {
 
 	public:
 		JsonError(const char *filename, const char* function, int32_t lineNumber, const std::string& message = "");
-		virtual ~JsonError() throw() {}
+		virtual ~JsonError() noexcept {}
 
-		virtual const char* what() const throw() { return _what.c_str(); }
+		virtual const char* what() const noexcept { return _what.c_str(); }
 
-		const char* filename() const throw() { return _filename; }
-		const char* function() const throw() { return _function; }
-		int32_t lineNumber() const throw() { return _lineNumber; }
-		const std::string& message() const throw() { return _message; }
+		const char* filename() const noexcept { return _filename; }
+		const char* function() const noexcept { return _function; }
+		int32_t lineNumber() const noexcept { return _lineNumber; }
+		const std::string& message() const noexcept { return _message; }
 
 		static std::string format(const char *fmt, ...); 
 	};

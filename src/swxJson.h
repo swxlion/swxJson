@@ -147,7 +147,7 @@ public:
 	Json(): _type(JSON_Uninit), _data(NULL) {}
 	~Json() { clean(); }
 
-	static JsonPtr parse(const char* data) throw(JosnInvalidContentError);
+	static JsonPtr parse(const char* data);
 
 	std::string str();
 
@@ -305,9 +305,9 @@ public:
 	inline enum ElementType type() const { return _type; }
 
 	//-- isNull(): return true only the target exist and which is null.
-	bool isNull(const std::string& path, const std::string& delim = "./") throw();
-	bool exist(const std::string& path, const std::string& delim = "./") throw() { return (getNode(path, delim) != nullptr); }
-	enum ElementType type(const std::string& path, const std::string& delim = "./") throw(JosnNodeNotExistError);
+	bool isNull(const std::string& path, const std::string& delim = "./") noexcept;
+	bool exist(const std::string& path, const std::string& delim = "./") noexcept { return (getNode(path, delim) != nullptr); }
+	enum ElementType type(const std::string& path, const std::string& delim = "./");
 
 	//==============================[ fetch members ]==============================//
 	//------------ get part ------------//
@@ -321,28 +321,28 @@ public:
 	const std::map<std::string, JsonPtr> * const getDict() const;
 
 	//------------ want part ------------//
-	operator bool()        const throw(JsonNodeTypeMissMatchError) { return wantBool(); }
-	operator float()       const throw(JsonNodeTypeMissMatchError) { return (float)wantReal(); }
-	operator double()      const throw(JsonNodeTypeMissMatchError) { return wantReal(); }
-	operator long double() const throw(JsonNodeTypeMissMatchError) { return wantReal(); }
-	operator std::string() const throw(JsonNodeTypeMissMatchError) { return wantString(); }
+	operator bool()        const { return wantBool(); }
+	operator float()       const { return (float)wantReal(); }
+	operator double()      const { return wantReal(); }
+	operator long double() const { return wantReal(); }
+	operator std::string() const { return wantString(); }
 
-	operator char()               const throw(JsonNodeTypeMissMatchError) { return (char)              wantInt (); }
-	operator unsigned char()      const throw(JsonNodeTypeMissMatchError) { return (unsigned char)     wantUInt(); }
-	operator short()              const throw(JsonNodeTypeMissMatchError) { return (short)             wantInt (); }
-	operator unsigned short()     const throw(JsonNodeTypeMissMatchError) { return (unsigned short)    wantUInt(); }
-	operator int()                const throw(JsonNodeTypeMissMatchError) { return (int)               wantInt (); }
-	operator unsigned int()       const throw(JsonNodeTypeMissMatchError) { return (unsigned int)      wantUInt(); }
-	operator long()               const throw(JsonNodeTypeMissMatchError) { return (long)              wantInt (); }
-	operator unsigned long()      const throw(JsonNodeTypeMissMatchError) { return (unsigned long)     wantUInt(); }
-	operator long long()          const throw(JsonNodeTypeMissMatchError) { return (long long)         wantInt (); }
-	operator unsigned long long() const throw(JsonNodeTypeMissMatchError) { return (unsigned long long)wantUInt(); }
+	operator char()               const { return (char)              wantInt (); }
+	operator unsigned char()      const { return (unsigned char)     wantUInt(); }
+	operator short()              const { return (short)             wantInt (); }
+	operator unsigned short()     const { return (unsigned short)    wantUInt(); }
+	operator int()                const { return (int)               wantInt (); }
+	operator unsigned int()       const { return (unsigned int)      wantUInt(); }
+	operator long()               const { return (long)              wantInt (); }
+	operator unsigned long()      const { return (unsigned long)     wantUInt(); }
+	operator long long()          const { return (long long)         wantInt (); }
+	operator unsigned long long() const { return (unsigned long long)wantUInt(); }
 
-	bool wantBool() const throw(JsonNodeTypeMissMatchError);
-	intmax_t wantInt() const throw(JsonNodeTypeMissMatchError);
-	uintmax_t wantUInt() const throw(JsonNodeTypeMissMatchError);
-	double wantReal() const throw(JsonNodeTypeMissMatchError);
-	std::string wantString() const throw(JsonNodeTypeMissMatchError);
+	bool wantBool() const;
+	intmax_t wantInt() const;
+	uintmax_t wantUInt() const;
+	double wantReal() const;
+	std::string wantString() const;
 
 	/*
 		* Deprecated !!! *
@@ -355,15 +355,15 @@ public:
 
 			Please refer "swxJson.Enhancement.inc.h" for all new interfaces.
 	*/
-	std::vector<bool> wantBoolVector() const throw(JsonNodeTypeMissMatchError);
-	std::vector<double> wantRealVector() const throw(JsonNodeTypeMissMatchError);
-	std::vector<intmax_t> wantIntVector() const throw(JsonNodeTypeMissMatchError);
-	std::vector<std::string> wantStringVector() const throw(JsonNodeTypeMissMatchError);
+	std::vector<bool> wantBoolVector() const;
+	std::vector<double> wantRealVector() const;
+	std::vector<intmax_t> wantIntVector() const;
+	std::vector<std::string> wantStringVector() const;
 
-	std::map<std::string, bool> wantBoolDict() const throw(JsonNodeTypeMissMatchError);
-	std::map<std::string, double> wantRealDict() const throw(JsonNodeTypeMissMatchError);
-	std::map<std::string, intmax_t> wantIntDict() const throw(JsonNodeTypeMissMatchError);
-	std::map<std::string, std::string> wantStringDict() const throw(JsonNodeTypeMissMatchError);
+	std::map<std::string, bool> wantBoolDict() const;
+	std::map<std::string, double> wantRealDict() const;
+	std::map<std::string, intmax_t> wantIntDict() const;
+	std::map<std::string, std::string> wantStringDict() const;
 
 	//-------------------[ fetch members by path ]-------------------//
 	//------------ get part ------------//
@@ -388,24 +388,24 @@ public:
 	const std::map<std::string, JsonPtr> * const getDict(const char* path, const std::string& delim = "./")  { return getDict(std::string(path), delim); }
 
 	//------------ want part ------------//
-	bool wantBool(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	intmax_t wantInt(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	uintmax_t wantUInt(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	double wantReal(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::string wantString(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::string wantStringAt(const std::string& path, const std::string& delim = "./") throw(JsonError) { return wantString(path, delim); }
+	bool wantBool(const std::string& path, const std::string& delim = "./");
+	intmax_t wantInt(const std::string& path, const std::string& delim = "./");
+	uintmax_t wantUInt(const std::string& path, const std::string& delim = "./");
+	double wantReal(const std::string& path, const std::string& delim = "./");
+	std::string wantString(const std::string& path, const std::string& delim = "./");
+	std::string wantStringAt(const std::string& path, const std::string& delim = "./") { return wantString(path, delim); }
 
-	bool wantBool(const char* path, const std::string& delim = "./") throw(JsonError)            { return wantBool(std::string(path), delim); }
-	intmax_t wantInt(const char* path, const std::string& delim = "./") throw(JsonError)         { return wantInt(std::string(path), delim); }
-	uintmax_t wantUInt(const char* path, const std::string& delim = "./") throw(JsonError)       { return wantUInt(std::string(path), delim); }
-	double wantReal(const char* path, const std::string& delim = "./") throw(JsonError)          { return wantReal(std::string(path), delim); }
-	std::string wantString(const char* path, const std::string& delim = "./") throw(JsonError)   { return wantString(std::string(path), delim); }
-	std::string wantStringAt(const char* path, const std::string& delim = "./") throw(JsonError) { return wantString(std::string(path), delim); }
+	bool wantBool(const char* path, const std::string& delim = "./")            { return wantBool(std::string(path), delim); }
+	intmax_t wantInt(const char* path, const std::string& delim = "./")         { return wantInt(std::string(path), delim); }
+	uintmax_t wantUInt(const char* path, const std::string& delim = "./")       { return wantUInt(std::string(path), delim); }
+	double wantReal(const char* path, const std::string& delim = "./")          { return wantReal(std::string(path), delim); }
+	std::string wantString(const char* path, const std::string& delim = "./")   { return wantString(std::string(path), delim); }
+	std::string wantStringAt(const char* path, const std::string& delim = "./") { return wantString(std::string(path), delim); }
 
 	//-- If any node in path (except the last node) which node type is not dict/object, will throw exception.
-	Json& operator [] (const char* path) throw(JsonNodeTypeMissMatchError);
-	Json& operator [] (const std::string& path) throw(JsonNodeTypeMissMatchError);
-	Json& operator [] (int index) throw(JsonNodeTypeMissMatchError);
+	Json& operator [] (const char* path);
+	Json& operator [] (const std::string& path);
+	Json& operator [] (int index);
 
 	/*
 		* Deprecated !!! *
@@ -418,26 +418,26 @@ public:
 
 			Please refer "swxJson.Enhancement.inc.h" for all new interfaces.
 	*/
-	std::vector<bool> wantBoolVector(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::vector<double> wantRealVector(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::vector<intmax_t> wantIntVector(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::vector<std::string> wantStringVector(const std::string& path, const std::string& delim = "./") throw(JsonError);
+	std::vector<bool> wantBoolVector(const std::string& path, const std::string& delim = "./");
+	std::vector<double> wantRealVector(const std::string& path, const std::string& delim = "./");
+	std::vector<intmax_t> wantIntVector(const std::string& path, const std::string& delim = "./");
+	std::vector<std::string> wantStringVector(const std::string& path, const std::string& delim = "./");
 
-	std::map<std::string, bool> wantBoolDict(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::map<std::string, double> wantRealDict(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::map<std::string, intmax_t> wantIntDict(const std::string& path, const std::string& delim = "./") throw(JsonError);
-	std::map<std::string, std::string> wantStringDict(const std::string& path, const std::string& delim = "./") throw(JsonError);
+	std::map<std::string, bool> wantBoolDict(const std::string& path, const std::string& delim = "./");
+	std::map<std::string, double> wantRealDict(const std::string& path, const std::string& delim = "./");
+	std::map<std::string, intmax_t> wantIntDict(const std::string& path, const std::string& delim = "./");
+	std::map<std::string, std::string> wantStringDict(const std::string& path, const std::string& delim = "./");
 
 
-	std::vector<bool> wantBoolVector(const char* path, const std::string& delim = "./") throw(JsonError)          { return wantBoolVector(std::string(path), delim); }
-	std::vector<double> wantRealVector(const char* path, const std::string& delim = "./") throw(JsonError)        { return wantRealVector(std::string(path), delim); }
-	std::vector<intmax_t> wantIntVector(const char* path, const std::string& delim = "./") throw(JsonError)       { return wantIntVector(std::string(path), delim); }
-	std::vector<std::string> wantStringVector(const char* path, const std::string& delim = "./") throw(JsonError) { return wantStringVector(std::string(path), delim); }
+	std::vector<bool> wantBoolVector(const char* path, const std::string& delim = "./")          { return wantBoolVector(std::string(path), delim); }
+	std::vector<double> wantRealVector(const char* path, const std::string& delim = "./")        { return wantRealVector(std::string(path), delim); }
+	std::vector<intmax_t> wantIntVector(const char* path, const std::string& delim = "./")       { return wantIntVector(std::string(path), delim); }
+	std::vector<std::string> wantStringVector(const char* path, const std::string& delim = "./") { return wantStringVector(std::string(path), delim); }
 
-	std::map<std::string, bool> wantBoolDict(const char* path, const std::string& delim = "./") throw(JsonError)         { return wantBoolDict(std::string(path), delim); }
-	std::map<std::string, double> wantRealDict(const char* path, const std::string& delim = "./") throw(JsonError)       { return wantRealDict(std::string(path), delim); }
-	std::map<std::string, intmax_t> wantIntDict(const char* path, const std::string& delim = "./") throw(JsonError)      { return wantIntDict(std::string(path), delim); }
-	std::map<std::string, std::string> wantStringDict(const char* path, const std::string& delim = "./") throw(JsonError){ return wantStringDict(std::string(path), delim); }
+	std::map<std::string, bool> wantBoolDict(const char* path, const std::string& delim = "./")          { return wantBoolDict(std::string(path), delim); }
+	std::map<std::string, double> wantRealDict(const char* path, const std::string& delim = "./")        { return wantRealDict(std::string(path), delim); }
+	std::map<std::string, intmax_t> wantIntDict(const char* path, const std::string& delim = "./")       { return wantIntDict(std::string(path), delim); }
+	std::map<std::string, std::string> wantStringDict(const char* path, const std::string& delim = "./") { return wantStringDict(std::string(path), delim); }
 
 public:
 	#include "swxJson.Enhancement.inc.h"

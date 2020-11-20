@@ -531,7 +531,7 @@ JsonPtr JsonParser::parse(const char* json)
 	return root;
 }
 
-JsonPtr Json::parse(const char* data) throw(JosnInvalidContentError)
+JsonPtr Json::parse(const char* data)
 {
 	JsonParser parser;
 	return parser.parse(data);
