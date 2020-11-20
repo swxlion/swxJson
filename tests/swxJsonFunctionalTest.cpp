@@ -18,7 +18,6 @@ void assignSignleElement()
 		b.setBool(0);   cout<<"Json must be false: ["<<b<<"]\n";
 #ifndef __clang__
 		b.setBool(NULL);   cout<<"Json must be false: ["<<b<<"]\n";
-		b.setBool(nullptr);   cout<<"Json must be false: ["<<b<<"]\n";
 #endif
 
 		i.setInt(232);   cout<<"Json must be 232: ["<<i<<"]\n";
