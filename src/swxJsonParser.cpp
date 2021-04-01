@@ -528,6 +528,9 @@ JsonPtr JsonParser::parse(const char* json)
 	if (*_pos != 0)
 		throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: content error. Maybe multi-jsons.");
 
+	if (root == nullptr)
+		throw JSON_ERROR_MSG(JosnInvalidContentError, "Json parser: invalid or incomplete data.");
+
 	return root;
 }
 
