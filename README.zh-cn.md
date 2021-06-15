@@ -6,6 +6,8 @@
 
 [English Version](README.md)
 
+[API 文档](APIs.zh-cn.md)
+
 
 ## 0. 诞生目标
 

@@ -6,6 +6,8 @@ A easy to use &amp; convenient JSON library for C++11.
 
 [简体中文](README.zh-cn.md)
 
+[API Docs (Chinese Only)](APIs.zh-cn.md)
+
 
 ## 0. The Goal of Birth
 
