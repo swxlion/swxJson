@@ -5,6 +5,11 @@
 #include <stack>
 #include "swxJson.h"
 
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#endif
+
 namespace swxJson {
 
 class JsonParser
